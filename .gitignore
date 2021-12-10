@@ -1,0 +1,7 @@
+env/
+*.db
+**/resume/
+*.log
+*.html
+**/deprecated
+__pycache__/
