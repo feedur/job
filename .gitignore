@@ -5,3 +5,4 @@ env/
 *.html
 **/deprecated
 __pycache__/
+.DS_store
