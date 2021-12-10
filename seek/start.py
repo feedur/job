@@ -17,6 +17,7 @@ from recruiters import recruiters
 import os
 
 jobs_path = './data/jobs.db'
+geckodriver_path = '/Users/tony/Documents/programming/job-search/env/geckodriver'
 SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
 SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 
@@ -131,7 +132,7 @@ def apply(id=55137148,sk=None):
 
 class Seek():
     def __init__(self, username=SEEK_USERNAME, password=SEEK_PASSWORD):
-        self.driver = webdriver.Firefox(executable_path='/Users/tony/Documents/programming/other/env/geckodriver')
+        self.driver = webdriver.Firefox(executable_path=geckodriver_path)
         self.username = username
         self.password = password
 

@@ -4,7 +4,7 @@ from docx.oxml.xmlchemy import OxmlElement
 from docx.shared import Pt
 
 
-analyst_resume_path = '/Users/tony/Documents/programming/other/resume/analyst/'
+analyst_resume_path = '/Users/tony/Documents/programming/job-search/resume/analyst/'
 
 def main():
     document = Document(analyst_resume_path + 'resume.docx')

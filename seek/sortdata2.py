@@ -7,10 +7,10 @@ from multiprocessing import Process, Queue
 from questions import words_of_interest
 
 
-jobs_path = '/Users/tony/Documents/programming/other/seek/data/jobs.db'
+jobs_path = './data/jobs.db'
 
 
-def find_jobs(exclude_recruiters=False):
+def find_jobs():
     w1 = ['financial',  'finance', 'equit', 'investment']
     w2 = ['analy', 'trader', 'banking', 'corporate', 'associate']
     negs = ['call centre', 'retail', 'customer service','senior', 'relationship', 'manager']
@@ -124,4 +124,4 @@ def create_sql_db():
         
 
 if __name__ == '__main__':
-    get_job_details()
+    find_jobs()

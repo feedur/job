@@ -7,7 +7,7 @@ from random import random
 import sqlite3
 import threading
 
-jobs_path = '/Users/tony/Documents/programming/other/seek/data/jobs.db'
+jobs_path = './data/jobs.db'
 
 def main():
     global terminate

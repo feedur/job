@@ -7,6 +7,7 @@ import sqlite3
 from dictionaries import merriam_webster, free_dictionary
 
 dictionary_path = './data/dictionary.db'
+resume_path = '/Users/tony/Documents/programming/job-search/resume/analyst/resume.txt'
 
 
 def get_questions(page=None, print_output=False):
@@ -344,7 +345,7 @@ def define(w, retry=False):
 
 # every word passed must match resume to evaluate true
 def search_resume(*words, return_type='regex'):
-    with open('/Users/tony/Documents/programming/other/resume/analyst/resume.txt', 'r') as f:
+    with open(resume_path, 'r') as f:
         resume = f.read()
     
     result = False
