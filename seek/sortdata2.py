@@ -96,32 +96,20 @@ def analyze_details(text, keywords={}): # takes the full job details for a singl
     return keywords
 
 def delete_old_entries():
-    with sqlite3.connect(jobs_path) as con:
-        ids = (id[0] for id in con.execute("SELECT id FROM jobs ORDER BY id DESC"))
-    
-    con.close()
-    for id in ids:
-        r = requests.get('https://www.seek.com.au/job/' + str(id))
-        if r.status_code == 200:
-            break
-    
-    page = bs4.BeautifulSoup(r.text)
-    match = re.search('posted [0-9]+[a-z] ago', page.text, flags=re.IGNORECASE)
-    assert match, 'no matches found'
-    print(match.group())
-    print(id)
-
-
-# probably won't be used again
-def create_sql_db():
     con = sqlite3.connect(jobs_path)
-    cur = con.cursor()
-    cur.execute('''CREATE TABLE IF NOT EXISTS jobs
-        (id INT, title TEXT, company TEXT, nation TEXT, state TEXT, city TEXT, area TEXT, suburb TEXT, sector_id INT, sector TEXT, industry_id INT, industry TEXT, work_type TEXT, details TEXT)''')
-    cur.execute('''CREATE TABLE IF NOT EXISTS applications (id INT, status TEXT)''')
-    con.commit()
+    length = con.execute('SELECT COUNT(*) from jobs').fetchone()[0]
+    ids = con.execute("SELECT id FROM jobs ORDER BY id DESC")
+    i = 0
+    for id in ids:
+        i += 1
+        if i > length / 4:
+            break
+
+        print(id)
+ 
     con.close()
+
         
 
 if __name__ == '__main__':
-    find_jobs()
+    delete_old_entries()

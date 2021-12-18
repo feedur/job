@@ -12,10 +12,10 @@ jobs_path = './data/jobs.db'
 def main():
     global terminate
     terminate = False
-    estimated_total_jobs = 228517
+    create_sql_db()
     starting_job_id = find_largest_job_id() + 1
     consec_errors = 0
-    for i in range(estimated_total_jobs):
+    for i in range(999999):
         try:
             Page(starting_job_id + i)
             consec_errors = 0
@@ -138,6 +138,17 @@ def find_largest_job_id():
 
     con.close()
     return largest
+
+
+def create_sql_db():
+    with sqlite3.connect(jobs_path) as con:
+        con.execute('''CREATE TABLE IF NOT EXISTS jobs
+            (id INT, title TEXT, company TEXT, nation TEXT, state TEXT, city TEXT, area TEXT, suburb TEXT, 
+            sector_id INT, sector TEXT, industry_id INT, industry TEXT, work_type TEXT, details TEXT)''')
+        con.execute('''CREATE TABLE IF NOT EXISTS applications (id INT, status TEXT)''')
+
+    con.close()
+
 
 if __name__ == '__main__':
     t = threading.Thread(target=termination)

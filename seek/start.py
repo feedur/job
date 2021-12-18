@@ -25,7 +25,6 @@ SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 def main(exclude_recruiters=True, ignore_errors=True):
     ids = (id for id in find_jobs() if id not in already_applied())
     sk = Seek()
-    times = []
     for id in ids:
         status = None
         print('applying:', id)
@@ -42,11 +41,6 @@ def main(exclude_recruiters=True, ignore_errors=True):
                     if not ignore_errors:
                         raise e
         
-        if times != []:
-            if time() - times[-1] < 1:
-                raise Exception('Too many applications at once, an error has probably occurred')
-
-        times.append(time())
         with sqlite3.connect(jobs_path) as con:
             con.execute('INSERT INTO applications VALUES (?, ?)', (str(id), str(status)))
             print(id, status)

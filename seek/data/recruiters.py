@@ -1,3 +1,4 @@
+# and other companies that you would like to avoid
 recruiters = [
     'keegan adams',
     'hays',
@@ -15,5 +16,6 @@ recruiters = [
     'profusion pac',
     'advance human solutions',
     'mars recruitment',
-    'recruitment'
+    'recruitment',
+    'kosec'
 ]
