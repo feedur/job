@@ -172,7 +172,7 @@ def get_checked_answers(q):
 def question_keywords(q):
     r = '!undefined'
     s = lambda regex, text=q['q']: re.search(regex, text, flags=re.IGNORECASE)
-    if s('experience|years|certificate|qualification|degree'):
+    if s('experience|years|certificate|qualification|degree|(?=.*have)(?=.*worked)|working'):
         keywords = words_of_interest(q['q'])
         if keywords == []: # no words of interest in question found
             r = '!not regex, search answers'
@@ -375,5 +375,5 @@ def valid_answer(a, regex):
 
 if __name__ == '__main__':
     questions = get_questions(print_output=True)
-    output = answer_question(questions[5])
+    output = answer_question(questions[1])
     print(output)
