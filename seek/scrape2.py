@@ -15,7 +15,8 @@ def main():
     create_sql_db()
     starting_job_id = find_largest_job_id()
     if starting_job_id == None or starting_job_id == '':
-        input('enter the id (number at the end of seek.com.au/job/[* this number *]) of a preferably older listing to start search on')
+        inp = input('enter the id (number at the end of seek.com.au/job/[* this number *]) of a preferably older listing to start search on')
+        starting_job_id = int(inp)
     else:
         starting_job_id += 1
 
