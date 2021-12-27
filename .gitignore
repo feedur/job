@@ -6,3 +6,4 @@ env/
 **/deprecated
 __pycache__/
 .DS_store
+geckodriver

@@ -131,7 +131,6 @@ def Page(job_id):
     print(output['company'])
 
 
-
 def find_largest_job_id():
     with sqlite3.connect(jobs_path, ) as con:
         largest = con.execute('SELECT MAX(id) FROM jobs').fetchall()[0][0]

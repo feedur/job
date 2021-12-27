@@ -7,8 +7,6 @@ from random import random
 from sortdata2 import find_jobs
 from bs4 import BeautifulSoup
 import sqlite3
-from questions import get_questions, answer_question
-from threading import Thread
 from time import time
 from sortdata2 import get_job_details
 import sys
@@ -16,14 +14,22 @@ sys.path.append('./data')
 from recruiters import recruiters
 import os
 
+# list of job applications performed under that person's name, table name created in applications.db will have same name
+user = 'simon'
+pdf_resume_path = '/Users/tony/Documents/programming/other/resume/simon/resume.pdf'
+from questions_simon import get_questions, answer_question
 jobs_path = './data/jobs.db'
-geckodriver_path = '/Users/tony/Documents/programming/job-search/env/geckodriver'
+applications_path = './data/applications.db'
+geckodriver_path = '/Users/tony/Documents/programming/job-search/geckodriver'
 SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
 SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 
 
-def main(exclude_recruiters=True, ignore_errors=True):
-    ids = (id for id in find_jobs() if id not in already_applied())
+def main(exclude_recruiters=True, ignore_errors=True, test_id=None):
+    if test_id == None:
+        ids = (id for id in find_jobs() if id not in already_applied())
+    else:
+        ids = [test_id]
     sk = Seek()
     for id in ids:
         status = None
@@ -41,8 +47,9 @@ def main(exclude_recruiters=True, ignore_errors=True):
                     if not ignore_errors:
                         raise e
         
-        with sqlite3.connect(jobs_path) as con:
-            con.execute('INSERT INTO applications VALUES (?, ?)', (str(id), str(status)))
+        with sqlite3.connect(applications_path) as con:
+            global user
+            con.execute(f'INSERT INTO {user} VALUES (?, ?)', (str(id), str(status)))
             print(id, status)
         
         con.close()
@@ -51,8 +58,9 @@ def main(exclude_recruiters=True, ignore_errors=True):
     sk.driver.close()
 
 def already_applied():
-    with sqlite3.connect(jobs_path) as con:
-        ids = [value[0] for value in con.execute('SELECT id FROM applications')]
+    with sqlite3.connect(applications_path) as con:
+        global user
+        ids = [value[0] for value in con.execute(f'SELECT id FROM {user}')]
 
     con.close()
     return ids
@@ -109,9 +117,11 @@ def apply(id=55137148,sk=None):
                     elif type(tag.attrs[attr]) == str:
                         attributes = tag.attrs[attr]
 
-                    xpath += '[@' + attr + '="' + attributes + '"]'
+                    if attr != 'class':
+                        xpath += '[@' + attr + '="' + attributes + '"]'
             
                 # waiting for an input/radio tag to be clickable doesn't work
+                print(xpath)
                 sk.Presence(xpath).click()
 
         sk.Clickable(con_btn).click()
@@ -160,7 +170,7 @@ class Seek():
         s = Select(e)
         return s.select_by_index(1)
 
-    def Upload_resume(self, search='//input[@id="resume-upload"]', upload_path='/Users/tony/Documents/programming/other/resume/analyst/resume.pdf'):
+    def Upload_resume(self, search='//input[@id="resume-upload"]', upload_path=pdf_resume_path):
         return self.Presence(search).send_keys(upload_path)
 
     def Delete_resume(self):
@@ -205,4 +215,4 @@ def checkurl(driver):
 
 
 if __name__ == "__main__":
-    main()
+    main(exclude_recruiters=False)

@@ -7,7 +7,8 @@ import sqlite3
 from dictionaries import merriam_webster, free_dictionary
 
 dictionary_path = './data/dictionary.db'
-resume_path = '/Users/tony/Documents/programming/job-search/resume/analyst/resume.txt'
+#resume_path = '/Users/tony/Documents/programming/job-search/resume/analyst/resume.txt'
+resume_path = '/Users/tony/Documents/programming/job-search/resume/simon/resume.txt'
 
 
 def get_questions(page=None, print_output=False):
@@ -172,7 +173,7 @@ def get_checked_answers(q):
 def question_keywords(q):
     r = '!undefined'
     s = lambda regex, text=q['q']: re.search(regex, text, flags=re.IGNORECASE)
-    if s('experience|years|certificate|qualification|degree|(?=.*have)(?=.*worked)|working'):
+    if s('experience|years|certificate|qualification|degree|(?=.*have)(?=.*work ed)|working'):
         keywords = words_of_interest(q['q'])
         if keywords == []: # no words of interest in question found
             r = '!not regex, search answers'
