@@ -14,6 +14,9 @@ def main():
     terminate = False
     create_sql_db()
     starting_job_id = find_largest_job_id() + 1
+    if starting_job_id == None or starting_job_id == '':
+        input('enter the id (number at the end of seek.com.au/job/[* this number *]) of a preferably older listing to start search on')
+
     consec_errors = 0
     for i in range(999999):
         try:
@@ -132,7 +135,7 @@ def Page(job_id):
 
 
 def find_largest_job_id():
-    with sqlite3.connect(jobs_path, ) as con:
+    with sqlite3.connect(jobs_path) as con:
         largest = con.execute('SELECT MAX(id) FROM jobs').fetchall()[0][0]
 
     con.close()
