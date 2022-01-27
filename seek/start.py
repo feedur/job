@@ -1,31 +1,40 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as ec
 from time import sleep
 from random import random
-from sortdata2 import find_jobs
+from sortdata import find_jobs
 from bs4 import BeautifulSoup
 import sqlite3
 from time import time
-from sortdata2 import get_job_details
+from sortdata import get_job_details
 import sys
 sys.path.append('./data')
 from recruiters import recruiters
-import os
+import json
+from questions import get_questions, answer_question
+import scrape
 
 # list of job applications performed under that person's name, table name created in applications.db will have same name
-user = 'simon'
-pdf_resume_path = '/Users/tony/Documents/programming/other/resume/simon/resume.pdf'
-from questions_simon import get_questions, answer_question
+user = 'tony'
+with open(f'../profiles/{user}/info.json', 'r') as f:
+    profile = json.loads(f.read())
+pdf_resume_path = '../resume/tech/resume.pdf'
 jobs_path = './data/jobs.db'
 applications_path = './data/applications.db'
-geckodriver_path = '/Users/tony/Documents/programming/job-search/geckodriver'
-SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
-SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
+geckodriver_path = '../geckodriver'
+SEEK_USERNAME = profile['login']['username']
+SEEK_PASSWORD = profile['login']['password']
+headless_browser = False
+
+def manager():
+    scrape.main()
+    main()
 
 
-def main(exclude_recruiters=True, ignore_errors=True, test_id=None):
+def main(exclude_recruiters=False, ignore_errors=True, test_id=None):
     if test_id == None:
         ids = (id for id in find_jobs() if id not in already_applied())
     else:
@@ -136,7 +145,12 @@ def apply(id=55137148,sk=None):
 
 class Seek():
     def __init__(self, username=SEEK_USERNAME, password=SEEK_PASSWORD):
-        self.driver = webdriver.Firefox(executable_path=geckodriver_path)
+        if headless_browser:
+            options = webdriver.firefox.options.Options()
+            options.headless = True
+            self.driver = webdriver.Firefox(executable_path=geckodriver_path, options=options)
+        else:
+            self.driver = webdriver.Firefox(executable_path=geckodriver_path)
         self.username = username
         self.password = password
 
@@ -215,4 +229,4 @@ def checkurl(driver):
 
 
 if __name__ == "__main__":
-    main(exclude_recruiters=False)
+    manager()
